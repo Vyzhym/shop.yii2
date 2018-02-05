@@ -12,7 +12,7 @@ class MenuWidget extends Widget{
     public $tpl;
     public $data;//массив всех категорий
     public $tree;
-    public $menuHTML;
+    public $menuHtml;
 
 
     public function init(){
@@ -26,8 +26,11 @@ class MenuWidget extends Widget{
     public function run(){
         $this->data = Category::find()->indexBy('id')->asArray()->all();
         $this->tree = $this->getTree();
-        debug($this->tree);
-        return $this->tpl;
+        $this->menuHtml = $this->getMenuHtml($this->tree);
+
+
+
+        return $this->menuHtml;
     }
 
 
@@ -44,6 +47,22 @@ class MenuWidget extends Widget{
                 $this->data[$node['parent_id']]['childs'][$node['id']] = &$node;
         }
         return $tree;
+    }
+
+    protected function getMenuHtml($tree)
+    {
+    $str = '';
+        foreach ($tree as $category) {
+            $str .= $this->catToTemplate($category);
+        }
+        return $str;
+    }
+
+    protected function catToTemplate ($category)
+    {
+        ob_start();
+        include __DIR__ . '/menu_tpl/'.$this->tpl ;
+        return ob_get_clean();
     }
 
 } 
