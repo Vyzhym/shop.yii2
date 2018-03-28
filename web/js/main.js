@@ -6,6 +6,63 @@
 	 speed: 300
  });
 
+ function showCart(cart) {
+	 $('#cart .modal-body').html(cart);
+	 $('#cart').modal();
+ }
+
+$('#cart .modal-body').on('click', '.del-item', function () {
+	var id = $(this).data('id');
+    $.ajax({
+        url: '/cart/del-item',
+        data: {id: id},
+        type: 'GET',
+        success: function (res) {
+            if(!res) alert('Ошибка!');
+
+            showCart(res);
+        },
+        error: function () {
+            alert('error!');
+
+        }
+    })
+
+});
+ 
+ function getCart() {
+     $.ajax({
+         url: '/cart/show',
+         type: 'GET',
+         success: function (res) {
+             if(!res) alert('Ошибка!');
+
+             showCart(res);
+         },
+         error: function () {
+             alert('error!');
+
+         }
+     })
+     return false;
+ }
+ 
+ function clearCart() {
+     $.ajax({
+         url: '/cart/clear',
+         type: 'GET',
+         success: function (res) {
+             if(!res) alert('Ошибка!');
+
+             showCart(res);
+         },
+         error: function () {
+             alert('error!');
+
+         }
+     })
+ }
+ 
  $('.add-to-cart').on('click',function (e) {
  	e.preventDefault();
 	 var id = $(this).data('id');
@@ -16,8 +73,8 @@
 		success: function (res) {
 		 	if(!res) alert('Ошибка!');
 
-			console.log(res);
-//showCart(res);
+			//console.log(res);
+showCart(res);
         },
 		 error: function () {
 		 	alert('error!');
